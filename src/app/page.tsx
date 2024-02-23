@@ -8,6 +8,9 @@ import Streams from "@/components/streams";
 import OnboardingButton from "@/components/ui/onboarding-button";
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
+import Tilt from "react-parallax-tilt";
+import { BackButton, NextButton } from "@/components/ui/onboarding-nav-buttons";
+import clsx from "clsx";
 
 export default function Home() {
   const stepComponents: { [key: number]: any } = {
@@ -29,11 +32,17 @@ export default function Home() {
     }
   };
 
+  const goToPreviousStep = () => {
+    if (currentStep > 1) {
+      setCurrentStep(currentStep - 1);
+    }
+  };
+
   // Animation variants
   const containerVariants = {
     initial: { scale: 0.95, opacity: 0 },
-    animate: { scale: 1, opacity: 1, transition: { duration: 0.25 } },
-    exit: { scale: 0.95, opacity: 0, transition: { duration: 0.25 } },
+    animate: { scale: 1, opacity: 1, transition: { duration: 0.125 } },
+    exit: { scale: 0.95, opacity: 0, transition: { duration: 0.125 } },
   };
 
   const getOnboardingButtonText = () => {
@@ -51,7 +60,7 @@ export default function Home() {
   };
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center space-y-6 fade-in">
+    <main className="flex min-h-screen flex-col items-center justify-center space-y-6 fade-in select-none">
       <AnimatePresence mode="wait">
         <motion.div
           key={currentStep}
@@ -65,6 +74,16 @@ export default function Home() {
           <OnboardingButton onClick={goToNextStep}>
             {getOnboardingButtonText()}
           </OnboardingButton>
+          <div className="flex flex-row space-x-48 align-middle justify-between items-center max-w-xl">
+            {currentStep !== 1 && (
+              <>
+                <BackButton onClick={goToPreviousStep} />
+                {currentStep < totalSteps && (
+                  <NextButton onClick={goToNextStep} />
+                )}
+              </>
+            )}
+          </div>
         </motion.div>
       </AnimatePresence>
     </main>
